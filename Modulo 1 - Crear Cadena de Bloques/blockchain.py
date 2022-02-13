@@ -76,4 +76,14 @@ class Blockchain:
             block_index += 1
 
         return True
+
+
 # Parte 2 - Minado de un bloque de una cadena
+
+# Crear una aplicación web
+# Creo una instancia de flask para crear una app web
+app = Flask(__name__)
+
+# Crear una blockchain
+# Creo una instancia de una cadena de bloques
+blockchain = Blockchain()
