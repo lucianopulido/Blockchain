@@ -108,3 +108,13 @@ def mine_block():
         'previous_hash': block['previous_hash']
     }
     return jsonify(response), http.HTTPStatus.OK
+
+
+# Obtener la cadena de bloques completa
+@app.route('/get_chain', methods=['GET'])
+def get_chain():
+    response = {
+        'chain': blockchain.chain,
+        'length': len(blockchain.chain)
+    }
+    return jsonify(response), http.HTTPStatus.OK
