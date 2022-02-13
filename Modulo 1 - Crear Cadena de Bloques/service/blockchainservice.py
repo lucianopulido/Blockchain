@@ -9,14 +9,12 @@ Created on Wed Feb  2 21:59:54 2022
 # Importar las librerias
 import datetime
 import hashlib
-import http
 import json
-from flask import Flask, jsonify
 
 
 # Parte 1 - Crear la cadena de bloques
 
-class Blockchain:
+class BlockchainService:
     # constructor de la clase
     def __init__(self):
         self.chain = []
@@ -77,62 +75,3 @@ class Blockchain:
             block_index += 1
 
         return True
-
-
-# Parte 2 - Minado de un bloque de una cadena
-
-# Crear una aplicación web
-
-# Creo una instancia de flask para crear una app web
-app = Flask(__name__)
-
-# Crear una blockchain
-
-# Creo una instancia de una cadena de bloques
-blockchain = Blockchain()
-
-
-# Minar un nuevo bloque
-@app.route('/mine_block', methods=['GET'])
-def mine_block():
-    previous_block = blockchain.get_previous_block()
-    previous_proof = previous_block['proof']
-    proof = blockchain.proof_of_work(previous_proof)
-    previous_hash = blockchain.hash(previous_block)
-    block = blockchain.create_block(proof, previous_hash)
-    response = {
-        'message': 'Felicidades, has minado un nuevo bloque!',
-        'index': block['index'],
-        'timestamp': block['timestamp'],
-        'proof': block['proof'],
-        'previous_hash': block['previous_hash']
-    }
-    return jsonify(response), http.HTTPStatus.OK
-
-
-# Obtener la cadena de bloques completa
-@app.route('/get_chain', methods=['GET'])
-def get_chain():
-    response = {
-        'chain': blockchain.chain,
-        'length': len(blockchain.chain)
-    }
-    return jsonify(response), http.HTTPStatus.OK
-
-
-@app.route('/is_valid', methods=['GET'])
-def is_valid():
-    is_valid = blockchain.is_chain_valid(blockchain.chain)
-    if is_valid:
-        response = {
-            'message': 'Todo correcto. La cadena de bloques es valida.',
-            'is_chain_valid': is_valid}
-    else:
-        response = {
-            'message': 'Error. La cadena de bloques no es valida.',
-            'is_chain_valid': is_valid}
-    return jsonify(response), http.HTTPStatus.OK
-
-
-# Ejecutar la app
-app.run(host='0.0.0.0', port=5000)
