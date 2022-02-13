@@ -9,6 +9,7 @@ Created on Wed Feb  2 21:59:54 2022
 # Importar las librerias
 import datetime
 import hashlib
+import http
 import json
 from flask import Flask, jsonify
 
@@ -62,7 +63,7 @@ class Blockchain:
         block_index = 1
         while block_index < len(chain):
             block = chain[block_index]
-            if block['previous_hash'] != self.hash(self, previous_block):
+            if block['previous_hash'] != self.hash(previous_block):
                 return False
 
             previous_proof = previous_block['proof']
@@ -81,9 +82,29 @@ class Blockchain:
 # Parte 2 - Minado de un bloque de una cadena
 
 # Crear una aplicación web
+
 # Creo una instancia de flask para crear una app web
 app = Flask(__name__)
 
 # Crear una blockchain
+
 # Creo una instancia de una cadena de bloques
 blockchain = Blockchain()
+
+
+# Minar un nuevo bloque
+@app.route('/mine_block', methods=['GET'])
+def mine_block():
+    previous_block = blockchain.get_previous_block()
+    previous_proof = previous_block['proof']
+    proof = blockchain.proof_of_work(previous_proof)
+    previous_hash = blockchain.hash(previous_block)
+    block = blockchain.create_block(proof, previous_hash)
+    response = {
+        'message': 'Felicidades, has minado un nuevo bloque!',
+        'index': block['index'],
+        'timestamp': block['timestamp'],
+        'proof': block['proof'],
+        'previous_hash': block['previous_hash']
+    }
+    return jsonify(response), http.HTTPStatus.OK
