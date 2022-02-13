@@ -118,3 +118,21 @@ def get_chain():
         'length': len(blockchain.chain)
     }
     return jsonify(response), http.HTTPStatus.OK
+
+
+@app.route('/is_valid', methods=['GET'])
+def is_valid():
+    is_valid = blockchain.is_chain_valid(blockchain.chain)
+    if is_valid:
+        response = {
+            'message': 'Todo correcto. La cadena de bloques es valida.',
+            'is_chain_valid': is_valid}
+    else:
+        response = {
+            'message': 'Error. La cadena de bloques no es valida.',
+            'is_chain_valid': is_valid}
+    return jsonify(response), http.HTTPStatus.OK
+
+
+# Ejecutar la app
+app.run(host='0.0.0.0', port=5000)
