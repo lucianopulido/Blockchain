@@ -22,12 +22,15 @@ class BlockchainService:
 
     # Este método sirve para crear un nuevo bloque y agregarlo a la cadena
     def create_block(self, proof, previous_hash):
+
         block = {'index': len(self.chain) + 1,
                  'timestamp': str(datetime.datetime.now()),
                  'proof': proof,
-                 'previous_hash': previous_hash
+                 'previous_hash': previous_hash,
+                 'hash': 0
                  }
-
+        hash = self.hash(block)
+        block['hash'] = hash
         self.chain.append(block)
         return block
 
@@ -61,7 +64,7 @@ class BlockchainService:
         block_index = 1
         while block_index < len(chain):
             block = chain[block_index]
-            if block['previous_hash'] != self.hash(previous_block):
+            if block['previous_hash'] != previous_block['hash']:
                 return False
 
             previous_proof = previous_block['proof']
