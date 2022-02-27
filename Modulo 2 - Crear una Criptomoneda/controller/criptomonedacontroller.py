@@ -32,7 +32,8 @@ def mine_block():
         'index': block['index'],
         'timestamp': block['timestamp'],
         'proof': block['proof'],
-        'previous_hash': block['previous_hash']
+        'previous_hash': block['previous_hash'],
+        'hash': block['hash']
     }
     return jsonify(response), http.HTTPStatus.OK
 
