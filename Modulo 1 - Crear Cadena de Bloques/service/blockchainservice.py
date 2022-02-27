@@ -29,6 +29,7 @@ class BlockchainService:
                  'previous_hash': previous_hash,
                  'hash': 0
                  }
+        # creo y guardo el hash en el bloque, cuando lo creo
         hash = self.hash(block)
         block['hash'] = hash
         self.chain.append(block)
