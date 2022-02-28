@@ -1,6 +1,5 @@
 # Importar las librerias
 import http
-import requests
 from flask import Flask, jsonify, request
 from uuid import uuid4
 from service.criptomonedaservice import *
