@@ -22,7 +22,6 @@ class CriptomonedaService:
     def __init__(self):
         self.chain = []
         # simula la mempool
-        self.transactions = Transaction();
         self.create_block(proof=1, previous_hash='0')
         self.nodes = set()
 
@@ -30,7 +29,7 @@ class CriptomonedaService:
     def create_block(self, proof, previous_hash):
         block = Block(len(self.chain), proof, previous_hash)
         # Despues de crear el bloque limpio la mempool de transacciones
-        self.transactions = []
+        block.transactions = []
         # creo y guardo el hash en el bloque, cuando lo creo
         hash = self.hash(block)
         block.hash = hash
@@ -82,9 +81,9 @@ class CriptomonedaService:
 
         return True
 
-    def add_transactions(self, sender, receiver, amount):
+    def add_transactions(self, block, sender, receiver, amount):
         transaction = Transaction(sender, receiver, amount)
-        self.transactions.append(transaction.__dict__)
+        block.transactions.append(transaction.__dict__)
         previous_block = self.get_previous_block()
         return previous_block['index'] + 1
 

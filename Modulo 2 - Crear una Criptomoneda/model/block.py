@@ -10,4 +10,4 @@ class Block:
         self.proof = proof
         self.previous_hash = previous_hash
         self.hash = 0
-        transaction = Transaction()
+        self.transactions = []
