@@ -3,7 +3,6 @@ import http
 import requests
 from flask import Flask, jsonify, request
 from uuid import uuid4
-from urllib.parse import urlparse
 from service.criptomonedaservice import *
 
 # Parte 2 - Minado de un bloque de una cadena

@@ -10,6 +10,9 @@ Created on Wed Feb  2 21:59:54 2022
 import datetime
 import hashlib
 import json
+from urllib.parse import urlparse
+from model.block import Block
+from model.transaction import Transaction
 
 
 # Parte 1 - Crear la Criptomoneda
@@ -19,25 +22,20 @@ class CriptomonedaService:
     def __init__(self):
         self.chain = []
         # simula la mempool
-        self.transactions = []
+        self.transactions = Transaction();
         self.create_block(proof=1, previous_hash='0')
+        self.nodes = set()
 
     # Este método sirve para crear un nuevo bloque y agregarlo a la cadena
     def create_block(self, proof, previous_hash):
-
-        block = {'index': len(self.chain) + 1,
-                 'timestamp': str(datetime.datetime.now()),
-                 'proof': proof,
-                 'previous_hash': previous_hash,
-                 'hash': 0,
-                 'transactions': self.transactions
-                 }
+        block = Block(len(self.chain), proof, previous_hash)
+        # Despues de crear el bloque limpio la mempool de transacciones
         self.transactions = []
         # creo y guardo el hash en el bloque, cuando lo creo
         hash = self.hash(block)
-        block['hash'] = hash
-        self.chain.append(block)
-        return block
+        block.hash = hash
+        self.chain.append(block.__dict__)
+        return block.__dict__
 
     # Este método sirve para obtener el último bloque
     def get_previous_block(self):
@@ -61,7 +59,7 @@ class CriptomonedaService:
         return new_proof
 
     def hash(self, block):
-        encoded_block = json.dumps(block, sort_keys=True).encode()
+        encoded_block = json.dumps(block.__dict__, sort_keys=True).encode()
         return hashlib.sha256(encoded_block).hexdigest()
 
     def is_chain_valid(self, chain):
@@ -85,12 +83,13 @@ class CriptomonedaService:
         return True
 
     def add_transactions(self, sender, receiver, amount):
-        self.transactions.append({
-            'sender': sender,
-            'receiver': receiver,
-            'amount': amount
-        })
+        transaction = Transaction(sender, receiver, amount)
+        self.transactions.append(transaction.__dict__)
         previous_block = self.get_previous_block()
         return previous_block['index'] + 1
+
+    def add_node(self, address):
+        parsed_url = urlparse(address)
+        self.nodes.add(parsed_url.netloc)
 
 # Parte 3 - Descentralizar la cadena de bloques
