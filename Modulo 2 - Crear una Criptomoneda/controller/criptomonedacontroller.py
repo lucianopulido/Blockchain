@@ -27,16 +27,7 @@ def mine_block():
     previous_hash = previous_block['hash']
     index_block = blockchain.add_transactions(sender=node_address, receiver='Luciano Pulido', amount=10)
     block = blockchain.create_block(proof, previous_hash)
-    response = {
-        'message': 'Felicidades, has minado un nuevo bloque!',
-        'index': block['index'],
-        'timestamp': block['timestamp'],
-        'proof': block['proof'],
-        'previous_hash': block['previous_hash'],
-        'hash': block['hash'],
-        'transactions': block['transactions']
-    }
-    return jsonify(response), http.HTTPStatus.OK
+    return block, http.HTTPStatus.OK
 
 
 # Obtener la cadena de bloques completa
@@ -46,7 +37,7 @@ def get_chain():
         'chain': blockchain.chain,
         'length': len(blockchain.chain)
     }
-    return jsonify(response), http.HTTPStatus.OK
+    return response, http.HTTPStatus.OK
 
 
 @app.route('/is_valid', methods=['GET'])
@@ -60,7 +51,7 @@ def is_valid():
         response = {
             'message': 'Error. La cadena de bloques no es valida.',
             'is_chain_valid': is_valid}
-    return jsonify(response), http.HTTPStatus.OK
+    return response, http.HTTPStatus.OK
 
     # Ejecutar la app
 
