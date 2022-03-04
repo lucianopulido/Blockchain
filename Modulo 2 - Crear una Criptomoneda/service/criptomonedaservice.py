@@ -7,7 +7,6 @@ Created on Wed Feb  2 21:59:54 2022
 # Modulo 2 - Crear una Criptomoneda
 
 # Importar las librerias
-import datetime
 import hashlib
 import json
 import requests
@@ -23,15 +22,16 @@ class CriptomonedaService:
     def __init__(self):
         self.chain = []
         # simula la mempool
+        self.mempool = []
         self.create_block(proof=1, previous_hash='0')
         self.nodes = set()
 
     # Este método sirve para crear un nuevo bloque y agregarlo a la cadena
     def create_block(self, proof, previous_hash):
-        block = Block(len(self.chain), proof, previous_hash)
-        # Despues de crear el bloque limpio la mempool de transacciones
-        block.transactions = []
+        block = Block(len(self.chain), proof, previous_hash, self.mempool)
         # creo y guardo el hash en el bloque, cuando lo creo
+        # Despues de crear el bloque limpio la mempool de transacciones
+        self.mempool = []
         hash = self.hash(block)
         block.hash = hash
         self.chain.append(block.__dict__)
@@ -82,9 +82,9 @@ class CriptomonedaService:
 
         return True
 
-    def add_transactions(self, block, sender, receiver, amount):
+    def add_transactions(self, sender, receiver, amount):
         transaction = Transaction(sender, receiver, amount)
-        block.transactions.append(transaction.__dict__)
+        self.mempool.append(transaction.__dict__)
         previous_block = self.get_previous_block()
         return previous_block['index'] + 1
 

@@ -10,7 +10,8 @@ from service.criptomonedaservice import *
 
 # Creo una instancia de flask para crear una app web
 app = Flask(__name__)
-
+# Crear la dirección del nodo en el puerto 5000
+node_address = str(uuid4()).replace('-', '')
 # Crear una blockchain
 
 # Creo una instancia de una cadena de bloques
@@ -24,6 +25,7 @@ def mine_block():
     previous_proof = previous_block['proof']
     proof = blockchain.proof_of_work(previous_proof)
     previous_hash = previous_block['hash']
+    index_block = blockchain.add_transactions(sender=node_address, receiver='Luciano Pulido', amount=10)
     block = blockchain.create_block(proof, previous_hash)
     response = {
         'message': 'Felicidades, has minado un nuevo bloque!',
@@ -31,7 +33,8 @@ def mine_block():
         'timestamp': block['timestamp'],
         'proof': block['proof'],
         'previous_hash': block['previous_hash'],
-        'hash': block['hash']
+        'hash': block['hash'],
+        'transactions': block['transactions']
     }
     return jsonify(response), http.HTTPStatus.OK
 
