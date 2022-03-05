@@ -56,4 +56,18 @@ def is_valid():
     # Ejecutar la app
 
 
+@app.route('/add_transaction', methods=['POST'])
+def add_transaction():
+    json = request.get_json()
+    transaction_keys = ['sender', 'receiver', 'amount']
+
+    if not all(key in json for key in transaction_keys):
+        return 'Faltan algunos elementos de la transacción', http.HTTPStatus.NOT_FOUND
+    index = blockchain.add_transactions(json['sender'], json['receiver'], json['amount'])
+    response = {
+        'message': f'La transacción será añadida al bloque {index}'
+    }
+    return response, http.HTTPStatus.CREATED
+
+
 app.run(host='0.0.0.0', port=5000)
