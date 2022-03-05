@@ -70,4 +70,25 @@ def add_transaction():
     return response, http.HTTPStatus.CREATED
 
 
+# Parte 3 - Descentralizar la Cadena de Bloques
+
+# Conectar Nuevos Nodos
+@app.route('/connect_node', methods=['POST'])
+def connect_node():
+    json = request.get_json()
+    nodes = json.get('nodes')
+    if nodes is None:
+        return 'No hay nodos para añadir', http.HTTPStatus.NOT_FOUND
+
+    for node in nodes:
+        blockchain.add_node(node)
+
+    response = {
+        'message': 'Todos los nodos han sido Conectados. La cadena de bloques de la criptomoneda '
+                   'contiene ahora los nodos siguientes',
+        'nodes': list(blockchain.nodes)
+    }
+    return response, http.HTTPStatus.CREATED
+
+
 app.run(host='0.0.0.0', port=5000)
