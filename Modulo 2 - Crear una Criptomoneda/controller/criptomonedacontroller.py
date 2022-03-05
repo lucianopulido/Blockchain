@@ -53,8 +53,6 @@ def is_valid():
             'is_chain_valid': is_valid}
     return response, http.HTTPStatus.OK
 
-    # Ejecutar la app
-
 
 @app.route('/add_transaction', methods=['POST'])
 def add_transaction():
@@ -91,4 +89,20 @@ def connect_node():
     return response, http.HTTPStatus.CREATED
 
 
+# Remplazar la cadena por la más larga (si es necesario)
+@app.route('/replace_chain', methods=['GET'])
+def replace_chain():
+    is_chain_replace = blockchain.replace_chain()
+    if is_chain_replace:
+        response = {
+            'message': 'Los nodos tenían diferentes cadenas, que han sido remplazadas por la más larga.',
+            'new_chain': blockchain.chain}
+    else:
+        response = {
+            'message': 'Todo Correcto. La cadena en todos los nodos ya es la más larga',
+            'current_chain': blockchain.chain}
+    return response, http.HTTPStatus.OK
+
+
+# Ejecutar la app
 app.run(host='0.0.0.0', port=5000)
