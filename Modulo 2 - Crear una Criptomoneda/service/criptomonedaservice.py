@@ -90,7 +90,8 @@ class CriptomonedaService:
 
     def add_node(self, address):
         parsed_url = urlparse(address)
-        self.nodes.add(parsed_url.netloc)
+        self.nodes.add(parsed_url.path)
+
 
     def replace_chain(self):
         network = self.nodes

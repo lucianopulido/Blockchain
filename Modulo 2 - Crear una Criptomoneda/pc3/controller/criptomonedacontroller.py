@@ -25,7 +25,7 @@ def mine_block():
     previous_proof = previous_block['proof']
     proof = blockchain.proof_of_work(previous_proof)
     previous_hash = previous_block['hash']
-    index_block = blockchain.add_transactions(sender=node_address, receiver='Luciano Pulido', amount=10)
+    index_block = blockchain.add_transactions(sender=node_address, receiver='Abril Pulido', amount=10)
     block = blockchain.create_block(proof, previous_hash)
     return block, http.HTTPStatus.OK
 
